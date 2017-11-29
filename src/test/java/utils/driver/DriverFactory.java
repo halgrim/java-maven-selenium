@@ -5,8 +5,10 @@ import io.github.bonigarcia.wdm.FirefoxDriverManager;
 import io.github.bonigarcia.wdm.InternetExplorerDriverManager;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.chrome.ChromeDriverService;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.ie.InternetExplorerDriver;
+import org.openqa.selenium.remote.DesiredCapabilities;
 
 public class DriverFactory {
 
@@ -18,7 +20,14 @@ public class DriverFactory {
         String browser = System.getenv("BROWSER");
         if (browser == null) {
             ChromeDriverManager.getInstance().setup();
-            return new ChromeDriver();
+
+            ChromeDriverService service =
+                    ((new ChromeDriverService.Builder()).usingPort(4444)).build();
+
+            DesiredCapabilities capability = new DesiredCapabilities();
+
+            return new ChromeDriver(service, capability);
+
         }
         switch (browser)
         {
